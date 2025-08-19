@@ -1,8 +1,0 @@
-
-en:
-  admin_js:
-    shop_pro:
-      title: "Shop Pro"
-  site_settings:
-    shop_enabled: "Enable Shop plugin"
-    shop_currency: "Default currency (e.g., CNY, USD)"
