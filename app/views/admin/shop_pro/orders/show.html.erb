@@ -1,0 +1,29 @@
+
+<div class="shop-pro-admin">
+  <h2>订单 #<%= @order.id %></h2>
+  <p>状态：<strong><%= @order.status %></strong></p>
+  <p>金额：<%= @order.total_cents %> <%= @order.currency %></p>
+  <p>收件人：<%= @order.customer_name %>（<%= @order.customer_phone %>）</p>
+  <p>地址：<%= @order.address %></p>
+  <p>备注：<%= @order.notes %></p>
+  <h3>商品</h3>
+  <table class="table">
+    <thead><tr><th>产品ID</th><th>数量</th><th>单价（分）</th><th>小计（分）</th></tr></thead>
+    <tbody>
+      <% @order.items.each do |it| %>
+        <tr>
+          <td><%= it.product_id %></td>
+          <td><%= it.qty %></td>
+          <td><%= it.unit_price_cents %></td>
+          <td><%= it.subtotal_cents %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="actions">
+    <%= form_tag mark_paid_admin_shop_pro_order_path(@order), method: :post do %><button class="btn btn-primary">标记已支付</button><% end %>
+    <%= form_tag mark_shipped_admin_shop_pro_order_path(@order), method: :post do %><button class="btn">标记已发货</button><% end %>
+    <%= form_tag mark_cancelled_admin_shop_pro_order_path(@order), method: :post do %><button class="btn btn-danger">取消订单</button><% end %>
+  </div>
+  <p><a href="<%= admin_shop_pro_orders_path %>">返回</a></p>
+</div>

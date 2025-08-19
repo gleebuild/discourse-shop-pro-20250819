@@ -1,0 +1,40 @@
+
+shop_enabled:
+  default: true
+  client: false
+
+shop_currency:
+  default: "CNY"
+  client: false
+
+shop_wechat_enabled:
+  default: false
+  client: false
+shop_wechat_mchid:
+  default: ""
+  client: false
+shop_wechat_appid:
+  default: ""
+  client: false
+shop_wechat_serial_no:
+  default: ""
+  client: false
+shop_wechat_api_v3_key:
+  default: ""
+  client: false
+shop_wechat_private_key_pem:
+  default: ""
+  client: false
+
+shop_alipay_enabled:
+  default: false
+  client: false
+shop_alipay_app_id:
+  default: ""
+  client: false
+shop_alipay_private_key_pem:
+  default: ""
+  client: false
+shop_alipay_alipay_public_key_pem:
+  default: ""
+  client: false
