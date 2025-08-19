@@ -1,0 +1,70 @@
+
+<div class="container">
+  <h1><%= @product.title %></h1>
+  <% if @product.main_image_url.present? %>
+    <p><img src="<%= @product.main_image_url %>" style="max-width: 360px; border-radius: 8px;"></p>
+  <% end %>
+  <p><strong>价格：</strong><%= @product.price_cents %> <%= @product.currency %></p>
+  <p><%= raw PrettyText.cook(@product.description || "") %></p>
+
+  <hr>
+  <h3><%= I18n.t("shop_pro.public.buy") %></h3>
+  <%= form_tag shop_pro_orders_path, method: :post do %>
+    <input type="hidden" name="product_id" value="<%= @product.id %>">
+    <label>数量</label> <input type="number" name="qty" value="1" min="1"><br>
+    <label>优惠码</label> <input type="text" name="coupon" placeholder="可选"><br>
+    <label>收件人</label> <input type="text" name="customer_name"><br>
+    <label>手机号</label> <input type="text" name="customer_phone"><br>
+    <label>地址</label> <input type="text" name="address" class="input-xxlarge"><br>
+    <label>备注</label> <textarea name="notes" rows="3" class="input-xxlarge"></textarea><br>
+    <button class="btn btn-primary" type="submit">提交订单（演示）</button>
+  <% end %>
+
+  <hr>
+  <h3>微信支付（演示三通道）</h3>
+  <p>• JSAPI 需要提供 openid（示例输入框）；H5 返回跳转链接；Native 返回二维码链接（code_url）。</p>
+  <div>
+    <label>openid（仅 JSAPI 必填）</label> <input type="text" id="wx-openid" placeholder="openid">
+  </div>
+  <p>
+    <button class="btn btn-primary" onclick="payWechat('jsapi')">JSAPI下单</button>
+    <button class="btn" onclick="payWechat('h5')">H5下单</button>
+    <button class="btn" onclick="payWechat('native')">Native下单</button>
+  </p>
+  <pre id="wx-result" style="white-space:pre-wrap;"></pre>
+  <script>
+    function collectForm() {
+      const form = document.querySelector('form[action="<%= shop_pro_orders_path %>"]');
+      const get = (name) => form.querySelector('[name="' + name + '"]')?.value || '';
+      return {
+        product_id: get('product_id'),
+        qty: get('qty'),
+        coupon: get('coupon'),
+        customer_name: get('customer_name'),
+        customer_phone: get('customer_phone'),
+        address: get('address'),
+        notes: get('notes')
+      };
+    }
+    async function payWechat(channel) {
+      const payload = collectForm();
+      payload.channel = channel;
+      const openid = document.getElementById('wx-openid').value;
+      if (channel === 'jsapi') payload.openid = openid;
+      const res = await fetch('/shop/pay/wechat/' + channel, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        credentials: 'same-origin'
+      });
+      const data = await res.json();
+      document.getElementById('wx-result').textContent = JSON.stringify(data, null, 2);
+      if (data.h5_url) {
+        window.location.href = data.h5_url;
+      }
+      // 对于 JSAPI：前端需在微信内环境调用 WeixinJSBridge 进行调起支付，这里返回 js_params 供你接入
+      // 对于 Native：把 code_url 转换为二维码给用户扫码（此处仅展示链接文本）
+    }
+  </script>
+
+</div>

@@ -1,0 +1,32 @@
+
+<% url = @coupon.new_record? ? admin_shop_pro_coupons_path : admin_shop_pro_coupon_path(@coupon) %>
+<% method = @coupon.new_record? ? :post : :put %>
+<div class="shop-pro-admin">
+  <h2>优惠券</h2>
+  <%= form_tag url, method: method do %>
+    <div class="control-group">
+      <label>Code</label>
+      <%= text_field_tag "coupon[code]", @coupon.code %>
+    </div>
+    <div class="control-group">
+      <label>绑定产品（可选，留空为全站券）</label>
+      <%= number_field_tag "coupon[product_id]", @coupon.product_id %>
+    </div>
+    <div class="control-group">
+      <label>立减金额（分）</label>
+      <%= number_field_tag "coupon[discount_cents]", @coupon.discount_cents || 0 %>
+    </div>
+    <div class="control-group">
+      <label>发行数量上限（可空）</label>
+      <%= number_field_tag "coupon[usage_limit]", @coupon.usage_limit %>
+    </div>
+    <div class="control-group">
+      <label>启用</label>
+      <%= check_box_tag "coupon[active]", "1", @coupon.active %>
+    </div>
+    <div class="form-actions">
+      <%= submit_tag I18n.t("shop_pro.admin.save"), class: "btn btn-primary" %>
+      <a class="btn" href="<%= admin_shop_pro_coupons_path %>">返回</a>
+    </div>
+  <% end %>
+</div>
